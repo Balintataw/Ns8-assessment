@@ -1,4 +1,4 @@
-import { UserDao } from "@daos";
+import { PostDao } from "@daos";
 import { logger } from "@shared";
 import { Request, Response, Router } from "express";
 import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
@@ -7,16 +7,16 @@ import { ParamsDictionary } from "express-serve-static-core";
 
 // Init shared
 const router = Router();
-const userDao = new UserDao();
+const postDao = new PostDao();
 
 /******************************************************************************
- *                      Get All Users - "GET /users/all"
+ *                      Get All Posts - "GET /posts/all"
  ******************************************************************************/
 
 router.get("/all", async (req: Request, res: Response) => {
   try {
-    const users = await userDao.getAll();
-    return res.status(OK).json(users);
+    const posts = await postDao.getAll();
+    return res.status(OK).json(posts);
   } catch (err) {
     logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({
@@ -26,36 +26,18 @@ router.get("/all", async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Get All Users with Posts - "GET /users/posts"
- ******************************************************************************/
-
-router.get("/posts/:id", async (req: Request, res: Response) => {
-  const userId = req.params.id;
-  try {
-    const userPosts = await userDao.getUserPosts(userId);
-    console.log("USER POSTS", userPosts);
-    return res.status(OK).json(userPosts);
-  } catch (err) {
-    logger.error(err.message, err);
-    return res.status(BAD_REQUEST).json({
-      error: err.message
-    });
-  }
-});
-
-/******************************************************************************
- *                       Add One - "POST /users/add"
+ *                       Add One - "POST /posts/add"
  ******************************************************************************/
 
 router.post("/add", async (req: Request, res: Response) => {
   try {
-    const { user } = req.body;
-    if (!user) {
+    const { post } = req.body;
+    if (!post) {
       return res.status(BAD_REQUEST).json({
         error: paramMissingError
       });
     }
-    await userDao.add(user);
+    await postDao.add(post);
     return res.status(CREATED).end();
   } catch (err) {
     logger.error(err.message, err);
@@ -66,19 +48,19 @@ router.post("/add", async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                       Update - "PUT /users/update"
+ *                       Update - "PUT /posts/update"
  ******************************************************************************/
 
 router.put("/update", async (req: Request, res: Response) => {
   try {
-    const { user } = req.body;
-    if (!user) {
+    const { post } = req.body;
+    if (!post) {
       return res.status(BAD_REQUEST).json({
         error: paramMissingError
       });
     }
-    user.id = Number(user.id);
-    await userDao.update(user);
+    post.id = Number(post.id);
+    await postDao.update(post);
     return res.status(OK).end();
   } catch (err) {
     logger.error(err.message, err);
@@ -89,13 +71,13 @@ router.put("/update", async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                    Delete - "DELETE /users/delete/:id"
+ *                    Delete - "DELETE /posts/delete/:id"
  ******************************************************************************/
 
 router.delete("/delete/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params as ParamsDictionary;
-    await userDao.delete(Number(id));
+    await postDao.delete(Number(id));
     return res.status(OK).end();
   } catch (err) {
     logger.error(err.message, err);

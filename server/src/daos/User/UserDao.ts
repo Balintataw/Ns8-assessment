@@ -1,4 +1,4 @@
-import { IUser } from "@entities";
+import { IUser, IPost } from "@entities";
 import axios from "axios";
 
 // Data Access Object
@@ -18,6 +18,19 @@ export class UserDao implements IUserDao {
     const { data } = await axios.get(`${process.env.BASE_API_URL}/users`);
     console.log("DATA", data);
     return data as IUser[];
+  }
+
+  /**
+   *
+   * @param userId
+   */
+  // NOTE the nested api calls appear to be broken
+  // eg url/users/1/posts is returning all posts regardless of user id
+  public async getUserPosts(userId: number | string): Promise<IPost[]> {
+    const { data } = await axios.get(
+      `${process.env.BASE_API_URL}/posts?userId=${userId}`
+    );
+    return data as IPost[];
   }
 
   /**

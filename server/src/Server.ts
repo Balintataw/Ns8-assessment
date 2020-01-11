@@ -5,6 +5,7 @@ import logger from "morgan";
 import path from "path";
 
 import UserRouter from "./routes/Users";
+import PostRouter from "./routes/Posts";
 
 // Init express
 const app = express();
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 });
 // Add sub-routes
 app.use("/users", UserRouter);
+app.use("/posts", PostRouter);
 
 /**
  * Point express to the 'views' directory. If you're using a
