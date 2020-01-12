@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import overlayFactory from "react-bootstrap-table2-overlay";
 
@@ -7,12 +8,11 @@ import overlayFactory from "react-bootstrap-table2-overlay";
 import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
 
 import { IUser, IPost } from "../types";
-import { findByLabelText } from "@testing-library/react";
 
 export const Home = () => {
+  const history = useHistory();
   const [loading, setLoading] = React.useState<boolean>(true);
   const [users, setUsers] = React.useState<IUser[]>([]);
-  const [posts, setPosts] = React.useState<IPost[]>([]);
 
   React.useEffect(() => {
     const load = async () => {
@@ -21,18 +21,13 @@ export const Home = () => {
       );
       setUsers(allUsers.data);
       console.log("USERS", allUsers);
-      const allPosts = await axios.get(
-        `${process.env.REACT_APP_REST_API_BASE_URL}/users/posts/${allUsers.data[0].id}`
-      );
-      setPosts(allPosts.data);
-      console.log("POSTS FOR USER", allPosts);
-      setTimeout(() => {
-        setLoading(false);
-      }, 2500);
+
+      setLoading(false);
     };
     load();
   }, []);
 
+  // TODO find out what these types are or scrap them
   const createViewPostsButton = (
     cell: any,
     row: any,
@@ -44,11 +39,13 @@ export const Home = () => {
       type="button"
       className="btn btn-warning"
     >
-      <i className="glyphicon glyphicon-edit"></i>
+      {/* Because when do you ever et to use the fighter jet icon? */}
+      <i className="fas fa-fighter-jet pr-2"></i>
       View Posts
     </button>
   );
 
+  // define all your columns here
   const columns = [
     {
       dataField: "id",
@@ -85,18 +82,19 @@ export const Home = () => {
       isDummyField: true,
       csvExport: false,
       align: "center",
-      headerAttrs: { width: 140 },
+      headerAttrs: { width: 180 },
       formatter: createViewPostsButton,
       events: {
+        // TODO find out what these types are or scrap them
         onClick: (
-          e: any,
-          column: any,
-          columnIndex: any,
-          row: any,
-          rowIndex: any
+          e: any, // click event
+          column: any, // this is the data defined in columns array
+          columnIndex: number,
+          row: any, // this is the user data
+          rowIndex: number
         ) => {
-          alert("CLICKED");
-          // TODO route navigate to users posts table page
+          console.log("CLICK", e, column, columnIndex, row, rowIndex);
+          history.push(`/posts/${row.id}`);
         }
       }
     }
