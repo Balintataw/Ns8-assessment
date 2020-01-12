@@ -14,7 +14,7 @@ export const BackButton = (props: BackButtonProps) => {
         textAlign: "center",
         cursor: "pointer",
         marginLeft: "auto",
-        height: "3rem",
+        height: "2.6rem",
         zIndex: 10
       }}
       className="btn btn-primary"

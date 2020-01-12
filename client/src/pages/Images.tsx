@@ -5,6 +5,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { IUser, IPhoto, IAlbum } from "src/types";
 
 import { BackButton } from "src/components/BackButton";
+import { ImageModal } from "src/components/ImageModal";
 
 export const Images = () => {
   const history = useHistory();
@@ -14,6 +15,10 @@ export const Images = () => {
   const [albums, setAlbums] = React.useState<IAlbum[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [photosVisible, setPhotosVisible] = React.useState<boolean>(false);
+  const [isImageModalVisible, setIsImageModalVisible] = React.useState<boolean>(
+    false
+  );
+  const [currentImage, setCurrentImage] = React.useState<IPhoto | null>(null);
 
   React.useEffect(() => {
     const load = async () => {
@@ -116,6 +121,7 @@ export const Images = () => {
               ))
             : photos.map(photo => (
                 <div
+                  style={{ cursor: "pointer" }}
                   className="col-xs-12 col-sm-6 col-md-4 col-lg-2 mb-3 mt-3"
                   key={photo.id + Math.random()}
                 >
@@ -123,11 +129,23 @@ export const Images = () => {
                     className="img-fluid img-thumbnail"
                     src={photo.thumbnailUrl}
                     alt={photo.title}
+                    onClick={() => {
+                      setCurrentImage(photo);
+                      setIsImageModalVisible(true);
+                    }}
                   />
                 </div>
               ))}
         </div>
       </div>
+      <ImageModal
+        isVisible={isImageModalVisible}
+        image={currentImage as IPhoto}
+        onClose={() => {
+          setIsImageModalVisible(false);
+          setCurrentImage(null);
+        }}
+      ></ImageModal>
     </div>
   );
 };
