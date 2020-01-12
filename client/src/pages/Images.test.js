@@ -14,14 +14,11 @@ jest.mock("react-router-dom", () => ({
     id: 1
   })
 }));
-jest.mock("axios", () => ({
-  get: jest.fn().mockResolvedValue({ data: [] })
-}));
 
 test("makes fetch request for user data", async () => {
   // Test throws a weird warning see: https://github.com/testing-library/react-testing-library/issues/281
 
-  // TODO not sure why test cant see env var for host
+  // TODO not sure why test cant see env var for host but as long as endpoint is right i guess
   const url = "undefined/users/1";
 
   act(() => {

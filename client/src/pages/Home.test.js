@@ -1,6 +1,5 @@
 import React from "react";
 import { render, cleanup, waitForElement, act } from "@testing-library/react";
-// import "jest-dom/extend-expect";
 import axiosMock from "axios";
 
 import { Home } from "./Home";
@@ -11,9 +10,6 @@ jest.mock("react-router-dom", () => ({
   useHistory: () => ({
     push: jest.fn()
   })
-}));
-jest.mock("axios", () => ({
-  get: jest.fn().mockResolvedValue({ data: [] })
 }));
 
 test("renders table", () => {
