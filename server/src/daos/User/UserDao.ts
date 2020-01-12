@@ -14,10 +14,19 @@ export class UserDao implements IUserDao {
    *
    */
   public async getAll(): Promise<IUser[]> {
-    // TODO types this response
     const { data } = await axios.get(`${process.env.BASE_API_URL}/users`);
-    console.log("DATA", data);
     return data as IUser[];
+  }
+
+  /**
+   *
+   * @param userId
+   */
+  public async getUserById(userId: number | string): Promise<IUser> {
+    const { data } = await axios.get(
+      `${process.env.BASE_API_URL}/users/${userId}`
+    );
+    return data as IUser;
   }
 
   /**

@@ -26,6 +26,23 @@ router.get("/all", async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
+ *                      Get User by ID - "GET /users/:id"
+ ******************************************************************************/
+
+router.get("/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try {
+    const user = await userDao.getUserById(id);
+    return res.status(OK).json(user);
+  } catch (err) {
+    logger.error(err.message, err);
+    return res.status(BAD_REQUEST).json({
+      error: err.message
+    });
+  }
+});
+
+/******************************************************************************
  *                      Get All Users with Posts - "GET /users/posts"
  ******************************************************************************/
 
@@ -33,7 +50,6 @@ router.get("/posts/:id", async (req: Request, res: Response) => {
   const userId = req.params.id;
   try {
     const userPosts = await userDao.getUserPosts(userId);
-    console.log("USER POSTS", userPosts);
     return res.status(OK).json(userPosts);
   } catch (err) {
     logger.error(err.message, err);
