@@ -23,12 +23,12 @@ export const Posts = () => {
         return;
       }
       // TODO move all api calls to an api service file
-      const { data } = await axios.get(
+      const { data } = await axios.get<IUser>(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/${id}`
       );
       setUser(data);
 
-      const allPosts = await axios.get(
+      const allPosts = await axios.get<IPost[]>(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/posts/${id}`
       );
       setPosts(allPosts.data);

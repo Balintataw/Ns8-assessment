@@ -16,7 +16,7 @@ export const Home = () => {
     const load = async () => {
       // TODO move all api calls to api service file
       // load all users, limited to 10 by api
-      const allUsers = await axios.get(
+      const allUsers = await axios.get<IUser[]>(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/all`
       );
       setUsers(allUsers.data);
@@ -26,13 +26,7 @@ export const Home = () => {
     load();
   }, []);
 
-  // TODO find out what these types are or scrap them
-  const createViewPostsButton = (
-    cell: any,
-    row: any,
-    rowIndex: number,
-    formatExtraData: any
-  ) => (
+  const createViewPostsButton = () => (
     <button
       style={{
         textAlign: "center",
@@ -48,6 +42,7 @@ export const Home = () => {
     </button>
   );
 
+  // TODO find out what these types are or scrap them
   const createViewImagesButton = (
     cell: any,
     row: any,
@@ -121,12 +116,11 @@ export const Home = () => {
       events: {
         onClick: (
           e: MouseEvent, // click event
-          column: any, // this is the data defined in columns array, would have to make interface with bunch of optinal fields
+          column: any, // this is the data defined in columns array, would have to make interface with bunch of optional fields
           columnIndex: number,
           row: IUser, // this is the user data
           rowIndex: number
         ) => {
-          console.log("CLICK", e, column, columnIndex, row, rowIndex);
           history.push(`/posts/${row.id}`);
         }
       }
@@ -143,7 +137,7 @@ export const Home = () => {
       events: {
         onClick: (
           e: MouseEvent, // click event
-          column: any, // this is the data defined in columns array, would have to make interface with bunch of optinal fields
+          column: any, // this is the data defined in columns array, would have to make interface with bunch of optional fields
           columnIndex: number,
           row: IUser, // this is the user data
           rowIndex: number

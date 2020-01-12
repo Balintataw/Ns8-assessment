@@ -23,12 +23,12 @@ export const Images = () => {
         return;
       }
       // TODO move all api calls to an api service file
-      const { data } = await axios.get(
+      const { data } = await axios.get<IUser>(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/${id}`
       );
       setUser(data);
 
-      const allUserAlbums = await axios.get(
+      const allUserAlbums = await axios.get<IAlbum[]>(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/albums/${id}`
       );
       setAlbums(allUserAlbums.data);
@@ -40,7 +40,7 @@ export const Images = () => {
   }, [id]);
 
   const fetchAlbumPhotos = async (albumId: number) => {
-    const allAlbumPhotos = await axios.get(
+    const allAlbumPhotos = await axios.get<IPhoto[]>(
       `${process.env.REACT_APP_REST_API_BASE_URL}/users/photos/${albumId}`
     );
     setPhotos(allAlbumPhotos.data);
