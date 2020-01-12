@@ -34,7 +34,7 @@ export const Images = () => {
       const user = await api.getUserById(id);
       setUser(user);
 
-      const albums = await api.getUserAlbums(id);
+      const albums = await api.getAlbumsByUserId(id);
       setAlbums(albums);
 
       setLoading(false);
