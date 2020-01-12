@@ -14,7 +14,8 @@ export const BackButton = (props: BackButtonProps) => {
         textAlign: "center",
         cursor: "pointer",
         marginLeft: "auto",
-        height: "3rem"
+        height: "3rem",
+        zIndex: 10
       }}
       className="btn btn-primary"
       onClick={onClick}

@@ -43,7 +43,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                      Get All Users with Posts - "GET /users/posts"
+ *                      Get All Users with Posts - "GET /users/posts/:id"
  ******************************************************************************/
 
 router.get("/posts/:id", async (req: Request, res: Response) => {
@@ -51,6 +51,40 @@ router.get("/posts/:id", async (req: Request, res: Response) => {
   try {
     const userPosts = await userDao.getUserPosts(userId);
     return res.status(OK).json(userPosts);
+  } catch (err) {
+    logger.error(err.message, err);
+    return res.status(BAD_REQUEST).json({
+      error: err.message
+    });
+  }
+});
+
+/******************************************************************************
+ *                      Get Users Albums - "GET /users/albums/:id"
+ ******************************************************************************/
+
+router.get("/albums/:id", async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  try {
+    const userAlbums = await userDao.getUserAlbums(userId);
+    return res.status(OK).json(userAlbums);
+  } catch (err) {
+    logger.error(err.message, err);
+    return res.status(BAD_REQUEST).json({
+      error: err.message
+    });
+  }
+});
+
+/******************************************************************************
+ *                      Get All Users photos by albumId - "GET /users/photos"
+ ******************************************************************************/
+
+router.get("/photos/:id", async (req: Request, res: Response) => {
+  const albumId = req.params.id;
+  try {
+    const userPhotos = await userDao.getUserPhotosByAlbumId(albumId);
+    return res.status(OK).json(userPhotos);
   } catch (err) {
     logger.error(err.message, err);
     return res.status(BAD_REQUEST).json({

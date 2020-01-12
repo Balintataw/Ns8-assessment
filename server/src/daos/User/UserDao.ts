@@ -1,4 +1,4 @@
-import { IUser, IPost } from "@entities";
+import { IUser, IPost, IAlbums, IPhotos } from "@entities";
 import axios from "axios";
 
 // Data Access Object
@@ -44,13 +44,40 @@ export class UserDao implements IUserDao {
 
   /**
    *
+   * @param userId
+   */
+  // NOTE the nested api calls appear to be broken
+  // eg url/users/1/posts is returning all posts regardless of user id
+  public async getUserAlbums(userId: number | string): Promise<IAlbums[]> {
+    const { data } = await axios.get(
+      `${process.env.BASE_API_URL}/albums?userId=${userId}`
+    );
+    return data as IAlbums[];
+  }
+
+  /**
+   *
+   * @param albumId
+   */
+  // NOTE the nested api calls appear to be broken
+  // eg url/users/1/posts is returning all posts regardless of user id
+  public async getUserPhotosByAlbumId(
+    albumId: number | string
+  ): Promise<IPhotos[]> {
+    const { data } = await axios.get(
+      `${process.env.BASE_API_URL}/photos?albumId=${albumId}`
+    );
+    return data as IPhotos[];
+  }
+
+  /**
+   *
    * @param user
    * NOTE Posts are faked, they will succeed or fail but are not persisted to api owners server
    */
   public async add(user: IUser): Promise<void> {
     // TODO
     const results = await axios.post(`${process.env.BASE_API_URL}/users`, user);
-    console.log("POST RESPONSE", results);
     return results as any;
   }
 

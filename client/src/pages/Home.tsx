@@ -2,6 +2,7 @@ import React, { MouseEvent } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
+import cellEditFactory from "react-bootstrap-table2-editor";
 import overlayFactory from "react-bootstrap-table2-overlay";
 
 import { IUser } from "../types";
@@ -33,7 +34,11 @@ export const Home = () => {
     formatExtraData: any
   ) => (
     <button
-      style={{ textAlign: "center", cursor: "pointer", lineHeight: "normal" }}
+      style={{
+        textAlign: "center",
+        cursor: "pointer",
+        lineHeight: "normal"
+      }}
       type="button"
       className="btn btn-warning"
     >
@@ -42,6 +47,36 @@ export const Home = () => {
       View Posts
     </button>
   );
+
+  const createViewImagesButton = (
+    cell: any,
+    row: any,
+    rowIndex: number,
+    formatExtraData: any
+  ) => (
+    <button
+      style={{
+        textAlign: "center",
+        cursor: "pointer",
+        lineHeight: "normal"
+      }}
+      type="button"
+      className="btn btn-warning"
+    >
+      {/* Because when do you ever get to use the cat icon? */}
+      <i className="fas fa-cat pr-2"></i>
+      View Images
+    </button>
+  );
+
+  const cellEdit = cellEditFactory({
+    mode: "click",
+    nonEditableRows: () => ["id"],
+    blurToSave: true,
+    beforeSaveCell: (oldValue: string, newValue: string) => {
+      alert(`Pretending to save '${newValue}'`);
+    }
+  });
 
   // define all your columns here
   const columns = [
@@ -75,12 +110,13 @@ export const Home = () => {
       }
     },
     {
-      dataField: "actions",
-      text: "Actions",
+      dataField: "posts",
+      text: "Posts",
       isDummyField: true,
       csvExport: false,
       align: "center",
       headerAttrs: { width: 180 },
+      headerAlign: "center",
       formatter: createViewPostsButton,
       events: {
         onClick: (
@@ -92,6 +128,27 @@ export const Home = () => {
         ) => {
           console.log("CLICK", e, column, columnIndex, row, rowIndex);
           history.push(`/posts/${row.id}`);
+        }
+      }
+    },
+    {
+      dataField: "images",
+      text: "Images",
+      isDummyField: true,
+      csvExport: false,
+      align: "center",
+      headerAttrs: { width: 180 },
+      headerAlign: "center",
+      formatter: createViewImagesButton,
+      events: {
+        onClick: (
+          e: MouseEvent, // click event
+          column: any, // this is the data defined in columns array, would have to make interface with bunch of optinal fields
+          columnIndex: number,
+          row: IUser, // this is the user data
+          rowIndex: number
+        ) => {
+          history.push(`/images/${row.id}`);
         }
       }
     }
@@ -112,6 +169,7 @@ export const Home = () => {
           spinner: true,
           background: "rgba(122,122,122,0.3)"
         })}
+        cellEdit={cellEdit}
       />
     </div>
   );

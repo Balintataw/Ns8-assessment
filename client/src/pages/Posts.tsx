@@ -18,6 +18,10 @@ export const Posts = () => {
 
   React.useEffect(() => {
     const load = async () => {
+      if (!id) {
+        setLoading(false);
+        return;
+      }
       // TODO move all api calls to an api service file
       const { data } = await axios.get(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/${id}`
@@ -31,8 +35,8 @@ export const Posts = () => {
 
       setLoading(false);
     };
-    id && load();
-  }, []);
+    load();
+  }, [id]);
 
   const cellEdit = cellEditFactory({
     mode: "click",
@@ -84,9 +88,11 @@ export const Posts = () => {
         {!loading && (
           <div style={{ width: "70%" }}>
             <h3>Posts</h3>
-            <p>Name: {user?.name}</p>
-            <p>Nickname: {user?.username}</p>
-            <p>Email: {user?.email}</p>
+            <span style={{ paddingRight: "1rem" }}>Name: {user?.name}</span>
+            <span style={{ paddingRight: "1rem" }}>
+              Nickname: {user?.username}
+            </span>
+            <span>Email: {user?.email}</span>
           </div>
         )}
         <BackButton text="Home" onClick={() => history.goBack()} />
