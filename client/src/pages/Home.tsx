@@ -1,11 +1,11 @@
 import React, { MouseEvent } from "react";
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory from "react-bootstrap-table2-editor";
 import overlayFactory from "react-bootstrap-table2-overlay";
 
-import { IUser } from "../types";
+import { IUser } from "src/types";
+import api from "src/services/api-service";
 
 export const Home = () => {
   const history = useHistory();
@@ -14,12 +14,9 @@ export const Home = () => {
 
   React.useEffect(() => {
     const load = async () => {
-      // TODO move all api calls to api service file
       // load all users, limited to 10 by api
-      const allUsers = await axios.get<IUser[]>(
-        `${process.env.REACT_APP_REST_API_BASE_URL}/users/all`
-      );
-      setUsers(allUsers.data);
+      const allUsers = await api.getAllUsers();
+      setUsers(allUsers);
 
       setLoading(false);
     };
@@ -67,7 +64,7 @@ export const Home = () => {
   const cellEdit = cellEditFactory({
     mode: "click",
     nonEditableRows: () => ["id"],
-    blurToSave: true,
+    // blurToSave: true,
     beforeSaveCell: (oldValue: string, newValue: string) => {
       alert(`Pretending to save '${newValue}'`);
     }
@@ -110,6 +107,9 @@ export const Home = () => {
       isDummyField: true,
       csvExport: false,
       align: "center",
+      style: {
+        verticalAlign: "middle"
+      },
       headerAttrs: { width: 180 },
       headerAlign: "center",
       formatter: createViewPostsButton,
@@ -131,6 +131,9 @@ export const Home = () => {
       isDummyField: true,
       csvExport: false,
       align: "center",
+      style: {
+        verticalAlign: "middle"
+      },
       headerAttrs: { width: 180 },
       headerAlign: "center",
       formatter: createViewImagesButton,
@@ -149,7 +152,7 @@ export const Home = () => {
   ];
 
   return (
-    <div style={{ padding: 8 }}>
+    <div style={{ padding: 16 }}>
       <BootstrapTable
         keyField="id"
         bootstrap4={true}

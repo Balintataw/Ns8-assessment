@@ -1,11 +1,11 @@
 import React from "react";
-import axios from "axios";
 import { useParams, useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
 import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
 import overlayFactory from "react-bootstrap-table2-overlay";
 
-import { IUser, IPost } from "../types";
+import { IUser, IPost } from "src/types";
+import api from "src/services/api-service";
 
 import { BackButton } from "src/components/BackButton";
 
@@ -22,16 +22,11 @@ export const Posts = () => {
         setLoading(false);
         return;
       }
-      // TODO move all api calls to an api service file
-      const { data } = await axios.get<IUser>(
-        `${process.env.REACT_APP_REST_API_BASE_URL}/users/${id}`
-      );
-      setUser(data);
+      const user = await api.getUserById(id);
+      setUser(user);
 
-      const allPosts = await axios.get<IPost[]>(
-        `${process.env.REACT_APP_REST_API_BASE_URL}/users/posts/${id}`
-      );
-      setPosts(allPosts.data);
+      const posts = await api.getPostsByUserId(id);
+      setPosts(posts);
 
       setLoading(false);
     };
@@ -76,7 +71,7 @@ export const Posts = () => {
   ];
 
   return (
-    <div style={{ padding: 8 }}>
+    <div style={{ padding: 16 }}>
       <div
         style={{
           width: "100%",

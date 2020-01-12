@@ -2,7 +2,7 @@ import React from "react";
 
 export const Header = () => (
   <nav className="navbar navbar-light bg-light">
-    <span className="navbar-brand mb-0 pb-0 h1">
+    <span className="navbar-brand mb-0 pb-0 h1" style={{ fontSize: "2rem" }}>
       Miraculous Multi Media Managing Machine
     </span>
     <span>(click any field to edit)</span>

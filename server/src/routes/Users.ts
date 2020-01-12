@@ -119,44 +119,12 @@ router.post("/add", async (req: Request, res: Response) => {
  *                       Update - "PUT /users/update"
  ******************************************************************************/
 
-router.put("/update", async (req: Request, res: Response) => {
-  try {
-    const { user } = req.body;
-    if (!user) {
-      return res.status(BAD_REQUEST).json({
-        error: paramMissingError
-      });
-    }
-    user.id = Number(user.id);
-    await userDao.update(user);
-    return res.status(OK).end();
-  } catch (err) {
-    logger.error(err.message, err);
-    return res.status(BAD_REQUEST).json({
-      error: err.message
-    });
-  }
-});
+router.put("/update", async (req: Request, res: Response) => {});
 
 /******************************************************************************
  *                    Delete - "DELETE /users/delete/:id"
  ******************************************************************************/
 
-router.delete("/delete/:id", async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params as ParamsDictionary;
-    await userDao.delete(Number(id));
-    return res.status(OK).end();
-  } catch (err) {
-    logger.error(err.message, err);
-    return res.status(BAD_REQUEST).json({
-      error: err.message
-    });
-  }
-});
-
-/******************************************************************************
- *                                     Export
- ******************************************************************************/
+router.delete("/delete/:id", async (req: Request, res: Response) => {});
 
 export default router;

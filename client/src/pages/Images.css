@@ -1,0 +1,33 @@
+.folder {
+  width: 150px;
+  height: 105px;
+  margin: 0 auto;
+  margin-top: 55px;
+  position: relative;
+  background-color: #ceb76c;
+  border-radius: 0 6px 6px 6px;
+  box-shadow: 3px 3px 7px rgba(0, 0, 0, 0.59);
+}
+
+.folder:before {
+  content: "";
+  width: 50%;
+  height: 12px;
+  border-radius: 0 20px 0 0;
+  box-shadow: 3px 0px 4px -3px rgba(0, 0, 0, 0.59);
+  background-color: #ceb76c;
+  position: absolute;
+  top: -12px;
+  left: 0px;
+}
+
+.folder:hover {
+  box-shadow: 6px 6px 7px rgba(0, 0, 0, 0.59);
+}
+
+.folder > p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
