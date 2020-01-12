@@ -2,28 +2,46 @@ import React from "react";
 import axios from "axios";
 import { useParams, useHistory } from "react-router-dom";
 import BootstrapTable from "react-bootstrap-table-next";
+import cellEditFactory, { Type } from "react-bootstrap-table2-editor";
 import overlayFactory from "react-bootstrap-table2-overlay";
 
 import { IUser, IPost } from "../types";
+
+import { BackButton } from "src/components/BackButton";
 
 export const Posts = () => {
   const history = useHistory();
   const { id } = useParams();
   const [posts, setPosts] = React.useState<IPost[]>([]);
+  const [user, setUser] = React.useState<IUser | null>(null);
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     const load = async () => {
+      // TODO move all api calls to an api service file
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_REST_API_BASE_URL}/users/${id}`
+      );
+      setUser(data);
+
       const allPosts = await axios.get(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/posts/${id}`
       );
       setPosts(allPosts.data);
-      console.log("POSTS FOR USER", allPosts);
 
       setLoading(false);
     };
     id && load();
   }, []);
+
+  const cellEdit = cellEditFactory({
+    mode: "click",
+    nonEditableRows: () => ["id", "title"],
+    blurToSave: true,
+    beforeSaveCell: (oldValue: string, newValue: string) => {
+      alert(`Pretending to save '${newValue}'`);
+    }
+  });
 
   const columns = [
     {
@@ -46,31 +64,32 @@ export const Posts = () => {
       text: "Body",
       style: {
         verticalAlign: "middle"
+      },
+      editor: {
+        type: Type.TEXTAREA
       }
     }
   ];
 
-  const BackButton = () => {
-    return (
-      <button
-        style={{ textAlign: "center", cursor: "pointer", lineHeight: "normal" }}
-        type="button"
-        className="btn btn-primary"
-        onClick={() => history.goBack()}
-      >
-        <i className="fas fa-chevron-left pr-2"></i>
-        Home
-      </button>
-    );
-  };
-
   return (
     <div style={{ padding: 8 }}>
-      <div>
-        <p>Name: Biff</p>
-        <p>Nickname: Future Biff</p>
-        <p>Email: Biffmail</p>
-        <BackButton />
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap"
+        }}
+      >
+        {!loading && (
+          <div style={{ width: "70%" }}>
+            <h3>Posts</h3>
+            <p>Name: {user?.name}</p>
+            <p>Nickname: {user?.username}</p>
+            <p>Email: {user?.email}</p>
+          </div>
+        )}
+        <BackButton text="Home" onClick={() => history.goBack()} />
       </div>
       <BootstrapTable
         keyField="id"
@@ -85,6 +104,7 @@ export const Posts = () => {
           spinner: true,
           background: "rgba(122,122,122,0.3)"
         })}
+        cellEdit={cellEdit}
       />
     </div>
   );

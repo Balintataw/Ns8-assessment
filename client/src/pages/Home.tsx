@@ -1,13 +1,10 @@
-import React from "react";
-import axios from "axios";
+import React, { MouseEvent } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 import BootstrapTable from "react-bootstrap-table-next";
 import overlayFactory from "react-bootstrap-table2-overlay";
 
-// import "../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css";
-import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
-
-import { IUser, IPost } from "../types";
+import { IUser } from "../types";
 
 export const Home = () => {
   const history = useHistory();
@@ -16,11 +13,12 @@ export const Home = () => {
 
   React.useEffect(() => {
     const load = async () => {
+      // TODO move all api calls to api service file
+      // load all users, limited to 10 by api
       const allUsers = await axios.get(
         `${process.env.REACT_APP_REST_API_BASE_URL}/users/all`
       );
       setUsers(allUsers.data);
-      console.log("USERS", allUsers);
 
       setLoading(false);
     };
@@ -31,7 +29,7 @@ export const Home = () => {
   const createViewPostsButton = (
     cell: any,
     row: any,
-    rowIndex: any,
+    rowIndex: number,
     formatExtraData: any
   ) => (
     <button
@@ -39,7 +37,7 @@ export const Home = () => {
       type="button"
       className="btn btn-warning"
     >
-      {/* Because when do you ever et to use the fighter jet icon? */}
+      {/* Because when do you ever get to use the fighter jet icon? */}
       <i className="fas fa-fighter-jet pr-2"></i>
       View Posts
     </button>
@@ -85,12 +83,11 @@ export const Home = () => {
       headerAttrs: { width: 180 },
       formatter: createViewPostsButton,
       events: {
-        // TODO find out what these types are or scrap them
         onClick: (
-          e: any, // click event
-          column: any, // this is the data defined in columns array
+          e: MouseEvent, // click event
+          column: any, // this is the data defined in columns array, would have to make interface with bunch of optinal fields
           columnIndex: number,
-          row: any, // this is the user data
+          row: IUser, // this is the user data
           rowIndex: number
         ) => {
           console.log("CLICK", e, column, columnIndex, row, rowIndex);
